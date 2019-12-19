@@ -1,11 +1,11 @@
-var server       = "";
-var realm        = "";
-var grantType    = "client_credentials";
-var clientId     = "";
-var clientSecret = "";
+const server       = "https://keycloak.xxx.com"
+const realm        = ""
+const grantType    = "client_credentials"
+const clientId     = ""
+const clientSecret = ""
 
-var url  = `${server}/auth/realms/${realm}/protocol/openid-connect/token`;
-var data = `grant_type=${grantType}&client_id=${clientId}&client_secret=${clientSecret}`;
+const url  = `${server}/auth/realms/${realm}/protocol/openid-connect/token`
+const raw = `grant_type=${grantType}&client_id=${clientId}&client_secret=${clientSecret}`
 
 pm.sendRequest({
     url: url,
@@ -13,13 +13,11 @@ pm.sendRequest({
     header: { 'Content-Type': 'application/x-www-form-urlencoded'},
     body: {
         mode: 'raw',
-        raw: data
+        raw: raw
     }
-},  function(err, response) {
+}, (err, response) => {
+    if(err)
+        console.error(err)
     
-    var response_json = response.json();
-    var token = response_json.access_token;
-    pm.environment.set('token', token);
-    console.log(token);
-});
-
+    pm.environment.set('token', response.json().access_token);
+})
